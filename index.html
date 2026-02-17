@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>农历新年烟花</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="fireworks-canvas"></canvas>
+      <div id="ornament" aria-hidden="true"></div>
+      <section id="time-panel" class="position-center">
+        <p id="solar-time" class="line-solar"></p>
+        <p id="lunar-day" class="line-lunar"></p>
+        <p id="ganzhi-time" class="line-ganzhi"></p>
+        <p id="next-new-year" class="line-next"></p>
+      </section>
+      <div id="countdown" class="countdown hidden" aria-live="polite"></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

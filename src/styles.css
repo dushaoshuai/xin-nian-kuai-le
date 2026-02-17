@@ -1,0 +1,212 @@
+:root {
+  --bg-top: #18203d;
+  --bg-bottom: #080a1d;
+  --text-color: #382a24;
+  --line-color: rgba(120, 80, 66, 0.05);
+  --panel-bg: rgba(255, 244, 232, 0.14);
+  --festival-overlay: 0;
+  --festival-hue: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+}
+
+body {
+  color: var(--text-color);
+  transition: color 900ms ease;
+}
+
+#app {
+  position: relative;
+  background: radial-gradient(120% 100% at 50% 0%, var(--bg-top) 0%, var(--bg-bottom) 80%);
+  transition: background 1800ms linear;
+}
+
+#app::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(transparent 96%, var(--line-color) 100%),
+    linear-gradient(90deg, transparent 97%, var(--line-color) 100%);
+  background-size: 100% 36px, 36px 100%;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+#app::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255, 142, 102, calc(var(--festival-overlay) * 0.62)), rgba(228, 46, 40, calc(var(--festival-overlay) * 0.4)) 42%, transparent 74%),
+    linear-gradient(180deg, rgba(255, 112, 92, calc(var(--festival-overlay) * 0.12)) 0%, rgba(192, 42, 52, calc(var(--festival-overlay) * 0.12)) 100%);
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+
+#fireworks-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#ornament {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#ornament::before,
+#ornament::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: min(22vw, 180px);
+  height: 44vh;
+  background: linear-gradient(180deg, rgba(232, 56, 48, calc(var(--festival-overlay) * 0.65)) 0%, rgba(232, 56, 48, 0.04) 85%);
+  filter: blur(0.2px);
+}
+
+#ornament::before {
+  left: 4vw;
+  clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+}
+
+#ornament::after {
+  right: 4vw;
+  clip-path: polygon(10% 0, 90% 0, 75% 100%, 25% 100%);
+}
+
+#time-panel {
+  position: absolute;
+  left: 50%;
+  width: min(92vw, 980px);
+  text-align: center;
+  padding: 1.2rem 1.4rem;
+  border-radius: 14px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(2px);
+  transition: top 800ms cubic-bezier(0.25, 0.9, 0.35, 1), transform 800ms cubic-bezier(0.25, 0.9, 0.35, 1), opacity 400ms ease;
+}
+
+#time-panel.position-center {
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#time-panel.position-bottom {
+  top: calc(100% - 92px);
+  transform: translate(-50%, -100%);
+}
+
+.line-solar {
+  margin: 0;
+  font-size: clamp(1.26rem, 2.2vw, 1.72rem);
+  letter-spacing: 0.015em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+
+.line-lunar,
+.line-ganzhi,
+.line-next {
+  margin: 0.58rem 0 0;
+  font-size: clamp(1.5rem, 3vw, 2.18rem);
+  opacity: 0.88;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+
+.line-lunar {
+  margin-top: 0.86rem;
+  font-size: clamp(1.74rem, 3.4vw, 2.56rem);
+  letter-spacing: 0.02em;
+}
+
+.line-ganzhi {
+  opacity: 0.9;
+}
+
+.line-next {
+  margin-top: 0.74rem;
+  opacity: 0.84;
+  font-size: clamp(1.26rem, 2.2vw, 1.72rem);
+}
+
+.hidden-row {
+  display: none;
+}
+
+.countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(4rem, 15vw, 10rem);
+  color: #fffaf1;
+  text-shadow: 0 0 20px rgba(255, 126, 80, 0.92), 0 0 38px rgba(255, 54, 36, 0.7);
+  transition: opacity 220ms ease;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.countdown-mode #time-panel {
+  opacity: 0.4;
+}
+
+.first-month-mode #app {
+  background:
+    radial-gradient(120% 100% at 50% 0%, #ffcfbd 0%, #f38c79 50%, #d65257 100%);
+}
+
+.first-month-mode #ornament::before,
+.first-month-mode #ornament::after {
+  background: linear-gradient(180deg, rgba(255, 128, 102, 0.52) 0%, rgba(232, 62, 48, 0.07) 88%);
+}
+
+.countdown-mode #app {
+  background:
+    radial-gradient(120% 100% at 50% 0%, #ffb08f 0%, #f06756 52%, #cb3340 100%);
+}
+
+.countdown-mode #ornament::before,
+.countdown-mode #ornament::after {
+  background: linear-gradient(180deg, rgba(255, 118, 92, 0.62) 0%, rgba(232, 62, 48, 0.09) 88%);
+}
+
+@media (max-width: 768px) {
+  #time-panel {
+    width: min(95vw, 700px);
+    padding: 0.8rem;
+  }
+
+  .line-solar,
+  .line-next {
+    font-size: clamp(1.14rem, 4.8vw, 1.38rem);
+  }
+
+  .line-lunar,
+  .line-ganzhi {
+    font-size: clamp(1.48rem, 6.6vw, 2.02rem);
+  }
+
+  #time-panel.position-bottom {
+    top: calc(100% - 76px);
+  }
+}
