@@ -1,4 +1,4 @@
-import type { FireworkTypeConfig } from './types';
+import type { FireworkTypeConfig, FireworkViewport } from './types';
 import { FireworkFactory } from './factory';
 
 interface Rocket {
@@ -85,11 +85,16 @@ export class FireworkEngine {
     this.hooks.onLaunch?.();
   }
 
-  launchFromGroundTo(config: FireworkTypeConfig, targetX: number, targetY: number): void {
+  launchFromGroundTo(
+    config: FireworkTypeConfig,
+    targetX: number,
+    targetY: number,
+    startX?: number
+  ): void {
     const startY = this.height + 8;
-    const startX = targetX + random(-50, 50);
+    const originX = startX ?? targetX + random(-50, 50);
     this.rockets.push({
-      x: startX,
+      x: originX,
       y: startY,
       targetX,
       targetY,
@@ -117,6 +122,13 @@ export class FireworkEngine {
   clearSky(alpha = 0.22): void {
     this.ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
     this.ctx.fillRect(0, 0, this.width, this.height);
+  }
+
+  renderLayer(
+    draw: (ctx: CanvasRenderingContext2D, viewport: FireworkViewport) => void
+  ): void {
+    draw(this.ctx, { width: this.width, height: this.height });
+    this.ctx.globalAlpha = 1;
   }
 
   update(dtMs: number): void {
@@ -208,6 +220,13 @@ export class FireworkEngine {
     return {
       rockets: this.rockets.length,
       particles: this.particles.length
+    };
+  }
+
+  getViewport(): FireworkViewport {
+    return {
+      width: this.width,
+      height: this.height
     };
   }
 }

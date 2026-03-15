@@ -53,3 +53,9 @@ npm run dev
 ## Configuration Tips
 - Timezone logic is Beijing-centric; keep `Asia/Shanghai` semantics when modifying time code.
 - Debug helpers rely on URL params (e.g., `?debugTime=...`, `?forceClickFireworks=1`). Preserve compatibility unless intentionally changing behavior.
+
+## Active Technologies
+- TypeScript 5.7, CSS, browser Canvas 2D + Vite 6, Vitest 3, lunar-typescrip (001-runner-firework-scene)
+
+## Recent Changes
+- 001-runner-firework-scene: Added TypeScript 5.7, CSS, browser Canvas 2D + Vite 6, Vitest 3, lunar-typescrip
