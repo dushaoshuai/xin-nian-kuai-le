@@ -20,18 +20,27 @@
 **Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
 **Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
 **Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Testing**: [List required automated test layers and manual validation, or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Performance Goals**: [Measured targets for affected flows, e.g., 60 fps animation, <2s startup, or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, motion/accessibility limits, offline-capable or NEEDS CLARIFICATION]  
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- **Code Quality**: Identify the modules, boundaries, and type/build checks that
+  keep the change small, readable, and maintainable.
+- **Testing**: Name the automated tests that will fail before implementation and
+  pass afterward, plus any required manual validation.
+- **User Experience Consistency**: Describe the user journey, visual/interaction
+  constraints, localization expectations, and accessibility considerations.
+- **Performance**: Define measurable budgets for the affected path and how they
+  will be verified before release.
+- **Observability/Change Scope**: State the debugging hooks, logging, or review
+  boundaries that keep the change observable and rollback-friendly.
 
 ## Project Structure
 

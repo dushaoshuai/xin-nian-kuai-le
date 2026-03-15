@@ -95,6 +95,26 @@
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
+### User Experience Consistency Requirements *(mandatory)*
+
+- **UX-001**: The experience MUST remain consistent with the established visual,
+  motion, and interaction patterns unless the spec explicitly defines a new
+  pattern and its rollout scope.
+- **UX-002**: The spec MUST describe user-facing states for loading, empty,
+  error, and recovery paths whenever they are relevant.
+- **UX-003**: The spec MUST capture accessibility and localization expectations
+  that affect text clarity, motion comfort, controls, or date/time presentation.
+
+### Performance Requirements *(mandatory)*
+
+- **PR-001**: The spec MUST define measurable performance targets for the
+  changed behavior, such as startup time, frame rate, input latency, or compute
+  duration.
+- **PR-002**: The spec MUST name the conditions under which performance is
+  evaluated, including device/browser assumptions or test fixtures when needed.
+- **PR-003**: The spec MUST define the evidence required to accept the change,
+  such as automated benchmarks, profiling output, or manual validation steps.
+
 ### Key Entities *(include if feature involves data)*
 
 - **[Entity 1]**: [What it represents, key attributes without implementation]
@@ -113,3 +133,5 @@
 - **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+- **SC-005**: [Performance outcome, e.g., "Primary animation remains at or above
+  55 fps on the target device during the 10-minute fireworks sequence"]
