@@ -18,6 +18,11 @@ export interface ExplosionContext {
   config: FireworkTypeConfig;
 }
 
+export interface FireworkViewport {
+  width: number;
+  height: number;
+}
+
 export interface ParticleSeed {
   velocity: Vec2;
   color: string;
