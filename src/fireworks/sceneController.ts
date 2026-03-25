@@ -6,7 +6,6 @@ import {
   type SceneDebugState,
   type SceneDispatch,
   type SceneLaunchRequest,
-  type SceneRenderState,
   type SceneTimings,
   type ViewportSize
 } from './sceneTypes';
@@ -62,26 +61,13 @@ function getFacing(startX: number, launchX: number): RunnerFacing {
 
 export class FireworkSceneController {
   private sequence: RunnerSequence | null = null;
-  private renderState: SceneRenderState = {
-    phase: 'hidden',
-    runnerVisible: false,
-    runnerX: 0,
-    runnerY: 0,
-    runnerOpacity: 0,
-    facing: 'right',
-    horizonVisible: true,
-    horizonY: 0
-  };
-  private viewport: ViewportSize = { width: 1, height: 1 };
   private readonly timings: SceneTimings;
 
   constructor(timings: Partial<SceneTimings> = {}) {
     this.timings = { ...DEFAULT_SCENE_TIMINGS, ...timings };
-    this.syncRenderState();
   }
 
   requestLaunch(request: SceneLaunchRequest, viewport: ViewportSize): boolean {
-    this.viewport = viewport;
     if (this.sequence && this.sequence.phase !== 'hidden') {
       return false;
     }
@@ -102,7 +88,6 @@ export class FireworkSceneController {
       source: request.source,
       targetY: request.targetY
     };
-    this.syncRenderState();
     return true;
   }
 
@@ -113,22 +98,15 @@ export class FireworkSceneController {
     this.sequence.phase = 'fading-out';
     this.sequence.elapsedMs = 0;
     this.sequence.pendingLaunch = false;
-    this.syncRenderState();
   }
 
-  update(dtMs: number, viewport: ViewportSize): SceneDispatch[] {
-    this.viewport = viewport;
+  update(dtMs: number): SceneDispatch[] {
     const dispatches: SceneDispatch[] = [];
     if (!this.sequence || this.sequence.phase === 'hidden') {
-      this.syncRenderState();
       return dispatches;
     }
 
     const dt = Math.max(0, Math.min(dtMs, 64));
-    this.sequence.startPosition.y = this.getHorizonY();
-    this.sequence.launchPosition.y = this.getHorizonY();
-    this.sequence.currentPosition.y = this.getHorizonY();
-
     switch (this.sequence.phase) {
       case 'fading-in':
         this.sequence.elapsedMs += dt;
@@ -202,14 +180,8 @@ export class FireworkSceneController {
         this.sequence = null;
         break;
     }
-    this.syncRenderState();
     return dispatches;
   }
-
-  getRenderState(): SceneRenderState {
-    return this.renderState;
-  }
-
   getDebugState(): SceneDebugState {
     if (!this.sequence) {
       return {
@@ -219,7 +191,6 @@ export class FireworkSceneController {
         startX: 0,
         launchX: 0,
         currentX: 0,
-        horizonY: this.getHorizonY(),
         opacity: 0
       };
     }
@@ -231,44 +202,7 @@ export class FireworkSceneController {
       startX: this.sequence.startPosition.x,
       launchX: this.sequence.launchPosition.x,
       currentX: this.sequence.currentPosition.x,
-      horizonY: this.sequence.currentPosition.y,
       opacity: this.sequence.opacity
     };
-  }
-
-  private syncRenderState(): void {
-    const horizonY = this.getHorizonY();
-    if (!this.sequence) {
-      this.renderState = {
-        phase: 'hidden',
-        runnerVisible: false,
-        runnerX: 0,
-        runnerY: horizonY,
-        runnerOpacity: 0,
-        facing: 'right',
-        horizonVisible: true,
-        horizonY
-      };
-      return;
-    }
-
-    this.renderState = {
-      phase: this.sequence.phase,
-      runnerVisible: this.sequence.opacity > 0.01 || this.sequence.phase === 'running-to-launch' || this.sequence.phase === 'running-back' || this.sequence.phase === 'launch-ready',
-      runnerX: this.sequence.currentPosition.x,
-      runnerY: this.sequence.currentPosition.y,
-      runnerOpacity: this.sequence.opacity,
-      facing: this.sequence.facing,
-      horizonVisible: true,
-      horizonY
-    };
-  }
-
-  private getHorizonY(): number {
-    return clamp(
-      this.viewport.height * (this.viewport.width <= 768 ? 0.79 : 0.83),
-      this.viewport.height * 0.68,
-      this.viewport.height - Math.max(82, this.viewport.height * 0.14)
-    );
   }
 }

@@ -60,23 +60,6 @@ export interface GroundPath {
   safeInsetX: number;
 }
 
-export interface HorizonState {
-  y: number;
-  styleVariant: 'festival-ground';
-  visibility: boolean;
-}
-
-export interface SceneRenderState {
-  phase: RunnerPhase;
-  runnerVisible: boolean;
-  runnerX: number;
-  runnerY: number;
-  runnerOpacity: number;
-  facing: RunnerFacing;
-  horizonVisible: boolean;
-  horizonY: number;
-}
-
 export interface SceneTimings {
   fadeInMs: number;
   runToLaunchMs: number;
@@ -92,7 +75,6 @@ export interface SceneDebugState {
   startX: number;
   launchX: number;
   currentX: number;
-  horizonY: number;
   opacity: number;
 }
 

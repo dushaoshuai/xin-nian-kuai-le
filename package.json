@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@rollup/rollup-darwin-arm64": "^4.57.1",
     "lunar-typescript": "^1.8.6"
   },
   "devDependencies": {
