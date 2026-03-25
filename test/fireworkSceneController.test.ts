@@ -28,7 +28,6 @@ function createRequest(targetX = 640, targetY = 240): SceneLaunchRequest {
 function advanceUntil(
   controller: FireworkSceneController,
   expectedPhase: string,
-  activeViewport: ViewportSize,
   stepMs = 16,
   maxSteps = 120
 ): void {
@@ -36,7 +35,7 @@ function advanceUntil(
     if (controller.getDebugState().phase === expectedPhase) {
       return;
     }
-    controller.update(stepMs, activeViewport);
+    controller.update(stepMs);
   }
   throw new Error(`Phase ${expectedPhase} was not reached`);
 }
@@ -47,20 +46,19 @@ describe('FireworkSceneController', () => {
 
     expect(controller.requestLaunch(createRequest(), viewport)).toBe(true);
 
-    const early = controller.update(100, viewport);
+    const early = controller.update(100);
     expect(early).toHaveLength(0);
     expect(controller.getDebugState().phase).toBe('fading-in');
     expect(controller.getDebugState().opacity).toBeGreaterThan(0);
-    expect(controller.getRenderState().runnerOpacity).toBeGreaterThan(0);
 
-    advanceUntil(controller, 'running-to-launch', viewport);
+    advanceUntil(controller, 'running-to-launch');
     expect(controller.getDebugState().phase).toBe('running-to-launch');
 
-    advanceUntil(controller, 'launch-ready', viewport);
+    advanceUntil(controller, 'launch-ready');
     expect(controller.getDebugState().phase).toBe('launch-ready');
     expect(controller.getDebugState().currentX).toBe(controller.getDebugState().launchX);
 
-    const dispatches = controller.update(16, viewport);
+    const dispatches = controller.update(16);
     expect(dispatches).toHaveLength(1);
     expect(dispatches[0].config.id).toBe(config.id);
     expect(dispatches[0].launchX).toBe(controller.getDebugState().launchX);
@@ -74,51 +72,50 @@ describe('FireworkSceneController', () => {
     expect(controller.requestLaunch(createRequest(700, 220), viewport)).toBe(true);
     expect(controller.requestLaunch(createRequest(400, 180), viewport)).toBe(false);
 
-    controller.update(240, viewport);
+    controller.update(240);
     controller.interrupt();
     expect(controller.getDebugState().phase).toBe('fading-out');
 
     for (let i = 0; i < 6; i += 1) {
-      controller.update(50, viewport);
+      controller.update(50);
     }
 
     expect(controller.getDebugState().phase).toBe('hidden');
-    expect(controller.getRenderState().runnerVisible).toBe(false);
+    expect(controller.getDebugState().hasActiveSequence).toBe(false);
   });
 
   it('transitions opacity smoothly on entry and exit', () => {
     const controller = new FireworkSceneController();
     controller.requestLaunch(createRequest(), viewport);
 
-    controller.update(60, viewport);
-    const enteringOpacity = controller.getRenderState().runnerOpacity;
+    controller.update(60);
+    const enteringOpacity = controller.getDebugState().opacity;
     expect(enteringOpacity).toBeGreaterThan(0);
     expect(enteringOpacity).toBeLessThan(1);
 
-    advanceUntil(controller, 'launch-ready', viewport);
-    controller.update(16, viewport);
-    advanceUntil(controller, 'fading-out', viewport);
+    advanceUntil(controller, 'launch-ready');
+    controller.update(16);
+    advanceUntil(controller, 'fading-out');
     expect(controller.getDebugState().phase).toBe('fading-out');
 
-    controller.update(60, viewport);
-    const exitingOpacity = controller.getRenderState().runnerOpacity;
+    controller.update(60);
+    const exitingOpacity = controller.getDebugState().opacity;
     expect(exitingOpacity).toBeGreaterThan(0);
     expect(exitingOpacity).toBeLessThan(1);
   });
 
-  it('keeps grounded positions inside narrow viewports and aligns runner to the horizon', () => {
+  it('keeps launches within safe insets on narrow viewports', () => {
     const controller = new FireworkSceneController();
     controller.requestLaunch(createRequest(10, 180), mobileViewport);
-    controller.update(1, mobileViewport);
+    controller.update(1);
 
     const debug = controller.getDebugState();
-    const render = controller.getRenderState();
 
     expect(debug.startX).toBeGreaterThanOrEqual(20);
     expect(debug.launchX).toBeGreaterThanOrEqual(20);
     expect(debug.startX).toBeLessThanOrEqual(mobileViewport.width - 20);
     expect(debug.launchX).toBeLessThanOrEqual(mobileViewport.width - 20);
-    expect(render.runnerY).toBe(render.horizonY);
-    expect(render.horizonY).toBeLessThan(mobileViewport.height);
+    expect(debug.currentX).toBeGreaterThanOrEqual(20);
+    expect(debug.currentX).toBeLessThanOrEqual(mobileViewport.width - 20);
   });
 });

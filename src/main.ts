@@ -6,8 +6,6 @@ import { AppState } from './core/types';
 import { FireworkEngine } from './fireworks/engine';
 import { fireworkRegistry } from './fireworks/registry';
 import { FireworkSceneController } from './fireworks/sceneController';
-import { renderCharacter } from './fireworks/render/characterRenderer';
-import { renderHorizon } from './fireworks/render/horizonRenderer';
 import { ThemeController } from './ui/theme';
 import { TimePanel } from './ui/timePanel';
 
@@ -24,7 +22,7 @@ const forceClickFireworks = ['1', 'true', 'on', 'yes'].includes(forceParam);
 
 window.addEventListener('resize', () => {
   engine.resize();
-  scene.update(0, engine.getViewport());
+  scene.update(0);
 });
 
 function pickFirework() {
@@ -113,26 +111,17 @@ function frame(nowPerfMs: number): void {
 
   const skyFade = ctx.state === AppState.COUNTDOWN ? 0 : ctx.isNight ? 0.18 : 0;
   engine.clearSky(skyFade);
-  const viewport = engine.getViewport();
-  const dispatches = scene.update(dtMs, viewport);
+  const dispatches = scene.update(dtMs);
 
   if (ctx.state === AppState.NEW_YEAR_SHOW) {
     requestAutoShowLaunch(dtMs);
   }
 
-  engine.renderLayer((renderCtx, renderViewport) => {
-    renderHorizon(renderCtx, renderViewport, scene.getRenderState());
-  });
-
   for (const dispatch of dispatches) {
     engine.launchFromGroundTo(dispatch.config, dispatch.targetX, dispatch.targetY, dispatch.launchX);
   }
-
   engine.update(dtMs);
   engine.render();
-  engine.renderLayer((renderCtx) => {
-    renderCharacter(renderCtx, scene.getRenderState());
-  });
 
   requestAnimationFrame(frame);
 }

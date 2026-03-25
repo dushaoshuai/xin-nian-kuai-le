@@ -8,8 +8,20 @@
   <body>
     <div id="app">
       <canvas id="fireworks-canvas"></canvas>
+      <div id="sky-glow" aria-hidden="true"></div>
+      <div id="hud-frame" aria-hidden="true">
+        <span class="frame-corner corner-top-left"></span>
+        <span class="frame-corner corner-top-right"></span>
+        <span class="frame-corner corner-bottom-left"></span>
+        <span class="frame-corner corner-bottom-right"></span>
+      </div>
       <div id="ornament" aria-hidden="true"></div>
       <section id="time-panel" class="position-center">
+        <div class="panel-meta">
+          <span class="meta-chip meta-chip-primary">LUNAR LINK</span>
+          <span id="panel-mode" class="meta-chip meta-chip-state">NIGHT WATCH</span>
+        </div>
+        <p id="panel-status" class="line-status">SYSTEM READY FOR SPRING FESTIVAL</p>
         <p id="solar-time" class="line-solar"></p>
         <p id="lunar-day" class="line-lunar"></p>
         <p id="ganzhi-time" class="line-ganzhi"></p>
